@@ -1,14 +1,15 @@
 CC=clang
-CFLAGS=-Wall -Wextra -pedantic -std=c2x
+CFLAGS=-Wall -Wextra -pedantic -std=c2x -Iinclude
+LDFLAGS=
+SRC = src/logger.c
+OBJ = build/logger.o
 
-BUILD_DIR=./build
+all: $(OBJ)
 
-logger.o: logger.c
-	$(CC) -c -o $(BUILD_DIR)/$@ $< $(CFLAGS)
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-.PHONY: all
-all: logger.o
-
-.PHONY: clean
 clean:
-	rm -v $(BUILD_DIR)/*
+	rm -v $(OBJ)
+
+.PHONY: all clean

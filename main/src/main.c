@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "./logger/logger.h"
+#include "../../logger/include/logger.h"
 
 #define LOG_FILE "./log.txt"
 

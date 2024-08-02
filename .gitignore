@@ -1,0 +1,4 @@
+build/
+*/build
+bin/
+source_me_for_local_pkg.sh
