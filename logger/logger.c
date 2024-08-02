@@ -143,6 +143,7 @@ void logger_sendmsg(Logger *logger, const char *msg) {
     char timestamp[256] = {0};
     if (strftime(timestamp, 256, "[%F] - [%T]", gmtime(&current_time)) <= 0) {
         PRINT_ERR_MSG("problem saving timestamp")
+        return;
     }
 
     if((fprintf(logger->logger, "%s | [%20llu]: %s\n", timestamp, ++(logger->msgNum), msg)) < 0) {
