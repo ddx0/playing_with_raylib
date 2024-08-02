@@ -1,12 +1,13 @@
 #include "logger.h"
 
 #define DEV_DEBUG 1
-#define PRINT_ERR_MSG(msg) fprintf(stderr, "ERROR: %s: " msg "\n", __FUNCTION__);
+#define PRINT_ERR_MSG(msg) fprintf(stderr, "ERROR: %s: " msg "\n", __FUNCTION__); fflush(stderr);
 #define PRINT_DEV_MSG(msg) fprintf(stdout, "DEV: %s: " msg "\n", __FUNCTION__); fflush(stdout);
 
 struct Logger {
     FILE *logger;
     bool isValid;
+    uint64_t msgNum;
 };
 
 // internal prototypes
@@ -93,6 +94,7 @@ void logger_set(Logger *logger, FILE *log_fp) {
 
     logger->logger = log_fp;
     logger->isValid = true;
+    logger->msgNum = 0;
 
     #ifdef DEV_DEBUG
     PRINT_DEV_MSG("logger set successfully")
@@ -108,6 +110,7 @@ void logger_unset(Logger *logger) {
 
     logger->logger = NULL;
     logger->isValid = false;
+    logger->msgNum = 0;
 
     #ifdef DEV_DEBUG
     PRINT_DEV_MSG("logger unset successfully")
@@ -128,7 +131,7 @@ void logger_sendmsg(Logger *logger, const char *msg) {
         PRINT_ERR_MSG("logger not valid")
         return;
     }
-    if((fprintf(logger->logger, "%s\n", msg)) < 0) {
+    if((fprintf(logger->logger, "[%20llu]: %s\n", ++(logger->msgNum), msg)) < 0) {
         PRINT_ERR_MSG("problems writing to logger")
         return;
     }
