@@ -131,7 +131,20 @@ void logger_sendmsg(Logger *logger, const char *msg) {
         PRINT_ERR_MSG("logger not valid")
         return;
     }
-    if((fprintf(logger->logger, "[%20llu]: %s\n", ++(logger->msgNum), msg)) < 0) {
+
+    // pull time info
+    time_t current_time = time(NULL);
+    if (current_time == (time_t)(-1)) {
+        PRINT_ERR_MSG("could not pull current time")
+        return;
+    }
+    // make a timestamp
+    char timestamp[256] = {0};
+    if (strftime(timestamp, 256, "[%F] - [%T]", gmtime(&current_time)) <= 0) {
+        PRINT_ERR_MSG("problem saving timestamp")
+    }
+
+    if((fprintf(logger->logger, "%s | [%20llu]: %s\n", timestamp, ++(logger->msgNum), msg)) < 0) {
         PRINT_ERR_MSG("problems writing to logger")
         return;
     }
