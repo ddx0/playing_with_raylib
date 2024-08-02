@@ -1,11 +1,13 @@
 #include "raylib.h"
 #include "./logger/logger.h"
 
+#define LOG_FILE "./log.txt"
+
 int main(void) {
     // setup logger
     Logger *logger = NULL;
 
-    if ((logger = logger_create("./test.txt")) == NULL) {
+    if ((logger = logger_create(LOG_FILE)) == NULL) {
         return -1;
     }
 
