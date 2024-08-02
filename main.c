@@ -11,13 +11,11 @@ int main(void) {
         return -1;
     }
 
-    logger_destroy(&logger);
-
     // printf("POST_DESTROY: %p\n", (void *) logger);
 
-    // init
+    // setup window
     const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenHeight = 600;
 
     InitWindow(screenWidth, screenHeight, "raylib example program");
 
@@ -35,6 +33,7 @@ int main(void) {
 
     // deinit
     CloseWindow();
+    logger_destroy(&logger);
 
     return 0;
 }
