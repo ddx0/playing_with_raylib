@@ -43,6 +43,7 @@ Logger *logger_create(const char *path) {
     #ifdef DEV_DEBUG
     PRINT_DEV_MSG("logger created successfully")
     #endif
+    logger_sendmsg(new_logger, "logger started...");
 
     return new_logger;
 }

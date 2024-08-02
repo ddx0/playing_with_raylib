@@ -11,7 +11,6 @@ int main(void) {
         return -1;
     }
 
-    logger_sendmsg(logger, "test");
     logger_destroy(&logger);
 
     // printf("POST_DESTROY: %p\n", (void *) logger);
