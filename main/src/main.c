@@ -3,7 +3,7 @@
 
 #define LOG_FILE "./log.txt"
 
-double constrain_itod(int num1, int num2, int val);
+double constrain_itod(int x, int y, int val);
 
 int main(void) {
     // setup logger
@@ -29,10 +29,14 @@ int main(void) {
         // draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawText("My First Window", 190, 200, 20, LIGHTGRAY);
+        int screenwidth = GetScreenWidth();
+        int renderwidth = GetRenderWidth();
+        int monitorwidth = GetMonitorWidth(GetCurrentMonitor());
+        char width_str[128] = {0};
+        snprintf(width_str, 128, "S_WIDTH: %d --- R_WIDTH: %d --- M_WIDTH: %d", screenwidth, renderwidth, monitorwidth);
+        DrawText(width_str, 100, 100, 15, RED);
         EndDrawing();
     }
-
     // deinit
     CloseWindow();
     logger_destroy(&logger);
@@ -40,20 +44,20 @@ int main(void) {
     return 0;
 }
 
-// map (val) between range (num1, num2) and return between 0.0-1.0
-double constrain_itod(int num1, int num2, int val) {
+// map (val) between range (x, y) and return between 0.0-1.0
+double constrain_itod(int x, int y, int val) {
     // ensure num1 represents min, num2 represents max
-    if (num1 > num2) {
-        int temp = num1;
-        num1 = num2;
-        num2 = temp;
+    if (x > y) {
+        x ^= y;
+        y ^= x;
+        x ^= y;
     }
     // clamp
-    val = (val < num1) ? num1 : val;
-    val = (val > num2) ? num2 : val;
+    val = (val < x) ? x : val;
+    val = (val > y) ? y : val;
     // constrain between 0.0-1.0
-    unsigned int range_total = abs(num2 - num1);
-    unsigned int range_val = abs(val - num1);
+    unsigned int range_total = abs(y - x);
+    unsigned int range_val = abs(val - x);
     double constrain = (double) range_val / (double) range_total;
     // printf("min: %d\nmax: %d\nval: %d\n", num1, num2, val);
     // printf("range total: %u\nrange val: %d\nconstraint: %lf\n", range_total, range_val, constrain);
