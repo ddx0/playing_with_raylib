@@ -1,29 +1,42 @@
 #include "raylib.h"
-#include "../../logger/include/logger.h"
+#include "logger.h"
+#include <stdio.h>
 
+#define CREATE_ERR_STR(charbuf, bufsize, msg) snprintf(charbuf, bufsize, "ERROR: %s: " msg "\n", __FUNCTION__); fflush(charbuf);
+// config logger
 #define LOG_FILE "./log.txt"
+#define PATH_SIZE 256
+// config window
+#define INIT_WINDOW_WIDTH 800
+#define INIT_WINDOW_HEIGHT 600
+#define INIT_WINDOW_NAME "playing with raylib"
 
+// util
 double constrain_itod(int x, int y, int val);
 
 int main(void) {
-    // setup logger
-    Logger *logger = NULL;
+    Logger *logger = logger_create();
 
-    if ((logger = logger_create(LOG_FILE)) == NULL) {
-        return -1;
+    if (!logger) {
+        fprintf(stderr, "logger could not be initialized, skipping...\n");
+    } else {
+        logger_set_logger(logger, LOG_FILE);
     }
 
-    // printf("POST_DESTROY: %p\n", (void *) logger);
+    // we can't grab size data before InitWindow(), so launch first?
+    // - apparently can't grab actual monitor size after InitWindow(), so hardcoded start size seemingly necessary
+    InitWindow(INIT_WINDOW_WIDTH, INIT_WINDOW_HEIGHT, INIT_WINDOW_NAME);
 
-    // setup window
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-
-    InitWindow(screenWidth, screenHeight, "raylib example program");
+    const int renderWidth = GetRenderWidth();//GetMonitorWidth(GetCurrentMonitor());
+    const int screenWidth = GetScreenWidth();//GetMonitorHeight(GetCurrentMonitor());
+    const int monitorWidth = GetMonitorWidth(GetMonitorCount());
+    char buff[128] = {0};
+    snprintf(buff, 128, "\nrenderWidth:  %6d\nscreenWidth:  %6d\nmonitorWidth: %6d\n", renderWidth, screenWidth, monitorWidth);
+    logger_sendmsg(logger, buff);
 
     SetTargetFPS(60);
 
-    while (!WindowShouldClose()) {
+    while (0/*!WindowShouldClose()*/) {
         // update variables
 
         // draw
@@ -34,7 +47,7 @@ int main(void) {
         int monitorwidth = GetMonitorWidth(GetCurrentMonitor());
         char width_str[128] = {0};
         snprintf(width_str, 128, "S_WIDTH: %d --- R_WIDTH: %d --- M_WIDTH: %d", screenwidth, renderwidth, monitorwidth);
-        DrawText(width_str, 100, 100, 15, RED);
+        DrawText(width_str, 100, 100, 25, RED);
         EndDrawing();
     }
     // deinit
