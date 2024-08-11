@@ -34,7 +34,6 @@
             break; \
         } \
     } \
-    printf("pos: %zu\nnull_pos: %zu\n", pos, null_pos); \
     (null_pos > 0) ? null_pos : 0; \
 })
 
