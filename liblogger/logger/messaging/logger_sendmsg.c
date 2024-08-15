@@ -34,7 +34,11 @@ int logger_sendmsg_num(Logger *logger, const char *msg, uint64_t msgNum) {
 }
 
 // info: send message to logger, use internal msgNum counter
+//       internal msgNum counter incremented after successful message sent
 // return: 0 on message sent, -1 on message fail
 int logger_sendmsg(Logger *logger, const char *msg) {
-    return logger_sendmsg_num(logger, msg, logger->msg.msgNum++);
+    if (!(logger_sendmsg_num(logger, msg, logger->msg.msgNum++) == 0)) {
+        logger->msg.msgNum--;
+        return -1;
+    }
 }
