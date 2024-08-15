@@ -6,7 +6,7 @@ void _replaceMsgNum(Logger *self) {
     char *pStart = strstr(self->msg.msgBuf, "[Q");
     pStart++;
     char *const pEnd = strstr(self->msg.msgBuf, "Q]");
-    const ptrdiff_t diff = pEnd - pStart; // size is 0-counted
+    const ptrdiff_t diff = pEnd - pStart; // size is 0-counted since we don't have NULL term
     const unsigned workingBufferSize = diff + 1;
     
     ASSERT(workingBufferSize == 20, "working buffer not size 20");

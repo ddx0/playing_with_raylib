@@ -13,6 +13,7 @@
 
 // util
 double constrain_itod(int x, int y, int val);
+// window
 
 int main(void) {
     Logger *logger = logger_create();
@@ -36,12 +37,25 @@ int main(void) {
 
     SetTargetFPS(60);
 
-    while (0/*!WindowShouldClose()*/) {
+    Color background_color = BLACK;
+
+    while (!WindowShouldClose()) {
         // update variables
+        int keyPressed = 0;
+        while ((keyPressed = GetKeyPressed())) {
+            switch (keyPressed) {
+                case 'A':
+                    background_color = RED;
+                    break;
+                case 'L':
+                    background_color = BLUE;
+                    break;
+            }
+        }
 
         // draw
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(background_color);
         int screenwidth = GetScreenWidth();
         int renderwidth = GetRenderWidth();
         int monitorwidth = GetMonitorWidth(GetCurrentMonitor());
