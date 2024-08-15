@@ -2,8 +2,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-// info: set logger file pointer
-// return: //
+// info: set logger file pointer, takes path to fopen
+// return: 0 if logger was set properly, -1 on err
 int logger_set_logger(Logger *self, const char *path) {
     FILE *fp = NULL;
     const char *logger_path = NULL;

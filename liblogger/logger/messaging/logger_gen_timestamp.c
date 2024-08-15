@@ -2,7 +2,8 @@
 #include <time.h>
 #include <string.h>
 
-#define TS_SUFFIX " | [%20llu]: "
+#define MSGNUM_SUFFIX " | [%20llu]: " // msgNum suffix, displayed after timestamp
+                                      // requires only 1 format spec, '[%20llu]' for msgNum
 #define CLEANUP_TIMESTAMP \
 free((void *)timestamp); \
 timestamp = NULL
@@ -11,6 +12,7 @@ free((void *)suffix); \
 suffix = NULL
 
 // info: generate timestamp, place into internal msg buffer
+//       msgNum is replaced with placeholder + by itself does not give a valid msgNum
 // return: on success (0), msg buffer is cleared and generated timestamp is copied into msg buffer
 //         on failure (-1), return with zero side effects
 int _logger_generate_timestamp(Logger *self) {
@@ -41,7 +43,7 @@ int _logger_generate_timestamp(Logger *self) {
     }
 
     // calculate len of suffix (expanded)
-    const int expanded_suffix_len = snprintf(NULL, 0, TS_SUFFIX, self->msg.msgNum);
+    const int expanded_suffix_len = snprintf(NULL, 0, MSGNUM_SUFFIX, self->msg.msgNum);
 
     if (expanded_suffix_len < 0) {
         PRINT_ERR_MSG("problem expanding suffix");
@@ -58,7 +60,7 @@ int _logger_generate_timestamp(Logger *self) {
             PRINT_ERR_MSG("couldn't allocate memory for suffix");
             goto cleanup;
         }
-        snprintf(suffix, expanded_suffix_len + 1, TS_SUFFIX, self->msg.msgNum);
+        snprintf(suffix, expanded_suffix_len + 1, MSGNUM_SUFFIX, self->msg.msgNum);
 
         // replace msgNum with placeholder to be replaced by logger_sendmsg
         //   - note: this is kinda hacky, refactoring needed

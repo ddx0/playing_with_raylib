@@ -2,20 +2,17 @@
 #include <string.h>
 #include <stddef.h>
 
-void _replaceMsgNum(Logger *self) {
-    char *pStart = strstr(self->msg.msgBuf, "[Q");
-    pStart++;
+// creating a message doesn't give a valid msgNum so we replace that here
+static inline void _replaceMsgNum(Logger *self) {
+    char *const pStart = strstr(self->msg.msgBuf, "[Q") + 1;
     char *const pEnd = strstr(self->msg.msgBuf, "Q]");
     const ptrdiff_t diff = pEnd - pStart; // size is 0-counted since we don't have NULL term
     const unsigned workingBufferSize = diff + 1;
     
     ASSERT(workingBufferSize == 20, "working buffer not size 20");
-
     char msgNumAsStr[20 + 1];
     snprintf(msgNumAsStr, 21, "%20llu", self->msg.msgNum);
-
     ASSERT(msgNumAsStr[20] == '\0', "did not null terminate");
-
     memcpy(pStart, msgNumAsStr, workingBufferSize);
 }
 

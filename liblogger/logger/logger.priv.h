@@ -8,18 +8,16 @@
 #include <stdio.h>
 
 // CONSTANTS
-#define TIMESTAMP_BUF_SIZE 128                       // buffer size for timestamp (translated, program-wide)
-#define TIMESTAMP_FORMAT_STR_DEFAULT "[%F] - [%T]"   // strftime format string for log prefix
-#define MSG_BUF_SIZE 4096                            // size of msg buf (ts + msg)
-#define MAX_MSG_SIZE (MSG_BUF_SIZE - TIMESTAMP_BUF_SIZE) // max size for msg
-#define LOGGER_PATH_BUF_SIZE 2048
+#define TIMESTAMP_BUF_SIZE 128                            // buffer size for timestamp (after translation with suffix, library-wide)
+#define TIMESTAMP_FORMAT_STR_DEFAULT "[%F] - [%T]"        // strftime format string for log prefix
+#define MSG_BUF_SIZE 4096                                 // size of msg buf (ts + msg)
+#define MAX_MSG_SIZE (MSG_BUF_SIZE - TIMESTAMP_BUF_SIZE)  // max size for msg
+#define LOGGER_PATH_BUF_SIZE 2048                         // path to set logger can only be up to of len(this - 1) chars
 
 // DATA STRUCTURES
 typedef struct Logger_Flags_t {
-    // bool usingStdOut;
     bool isReadyToSend;
     bool hasOpen_fd;
-    // bool hadIssuesClosing_fd;
 } Logger_Flags;
 
 typedef struct Logger_Msg_t {
@@ -45,7 +43,7 @@ const char *_util_safe_cstr(const char *, const size_t, const size_t);
 int _logger_generate_timestamp(Logger *);
 // reset
 void _logger_init(Logger *);
-// ready = open fs + has timestamp (is ready to sendmsg)
+// ready = open fd + has timestamp (is ready to sendmsg)
 bool _logger_has_open_fd(Logger *);
 bool _logger_is_ready(Logger *);
 // logger file pointer

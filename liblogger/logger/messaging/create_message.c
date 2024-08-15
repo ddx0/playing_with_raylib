@@ -7,6 +7,7 @@ free((void *)msgBuf); \
 msgBuf = NULL
 
 // try to create message for logger, save in internal buffer
+// if successful, msgNum will be invalid and _replaceMsgNum will need to be called to be valid
 // return: 0 if msg is input to buffer successfully, -1 on error
 int _logger_create_message(Logger *self, const char *msg) {
     ASSERT(self, "can't create message if logger is null");
